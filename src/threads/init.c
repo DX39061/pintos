@@ -133,7 +133,34 @@ pintos_init (void)
     /* Run actions specified on kernel command line. */
     run_actions (argv);
   } else {
-    // TODO: no command line passed to kernel. Run interactively 
+    while (true) {
+      printf("Pintos> ");
+      char *command = (char *)malloc(1024);
+      memset(command, 0, 1024);
+      int index = 0;
+      while (true) {
+        char c = input_getc();
+        if (c == '\r') {
+          printf("\n");
+          break;
+        } else if (c == 127) {
+          if (index > 0) {
+            command[--index] = 0;
+            printf("\b \b");
+          }
+          continue;
+        }
+        if (index >= 1023) {
+          continue;
+        }
+        printf("%c", c);
+        command[index++] = c;
+      }
+      printf("Command: %s\n", command);
+      free(command);
+      command = NULL;
+    }
+    
   }
 
   /* Finish up. */
